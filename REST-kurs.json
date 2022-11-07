@@ -1,0 +1,986 @@
+{
+	"info": {
+		"_postman_id": "379406e7-d40e-41da-981a-797f8c815b51",
+		"name": "REST-kurs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "crud:api",
+			"item": [
+				{
+					"name": "crud:api Probe Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/probe",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"probe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crud:api Person List + var",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json().items\r",
+									"jsonData.forEach((item, index) => {\r",
+									"    pm.collectionVariables.set(`person_${index}`, item[\"_uuid\"])\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/person",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crud:api Person Create Random",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"personUUID\", jsonData.items[0][\"_uuid\"]);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"random_age\", _.random(18, 99))\r",
+									"pm.variables.set(\"random_postalcode\", _.random(10000, 99999))\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n    \"A_name\": {\r\n        \"first\": \"{{$randomFirstName}}\",\r\n        \"last\": \"{{$randomLastName}}\"\r\n    },\r\n    \"B_age\": {{random_age}},\r\n    \"C_spouse\": null,\r\n    \"D_address\": {\r\n        \"city\": \"{{$randomCity}}\",\r\n        \"postalCode\": \"{{random_postalcode}}\",\r\n        \"street\": \"{{$randomStreetAddress}}\"\r\n    },\r\n    \"E_contactInfo\":\r\n        [\r\n            {\"mobile\": \"{{$randomPhoneNumber}}\"},\r\n            {\"email\": \"{{$randomExampleEmail}}\"}\r\n        ]\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/person",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crud:api Delete Person",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/person/{{person_0}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person",
+								"{{person_0}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Uppgifter",
+			"item": [
+				{
+					"name": "Lista personer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"let jsonData = pm.response.json().items\r",
+									"jsonData.forEach((item, index) => {\r",
+									"    pm.collectionVariables.set(`person_${index}`, item[\"_uuid\"])\r",
+									"})\r",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/person",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lägg till en person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"personUUID\", jsonData.items[0][\"_uuid\"]);\r",
+									"*/\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n        \"A_name\": {\r\n            \"first\": \"Harvey\",\r\n            \"last\": \"Bode\"\r\n        },\r\n        \"B_age\": 57,\r\n        \"C_spouse\": null,\r\n        \"D_address\": {\r\n            \"city\": \"Columbia\",\r\n            \"postalCode\": \"61153\",\r\n            \"street\": \"9911 Monty Meadow\"\r\n        },\r\n        \"E_contactInfo\": [\r\n            {\r\n                \"mobile\": \"498-968-8879\"\r\n            },\r\n            {\r\n                \"email\": \"Frederic_Gorczany@example.com\"\r\n            }\r\n        ]\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/person",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sök efter en person",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/person/[uuid för personen]",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person",
+								"[uuid för personen]"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ändra en person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/person/[uuid för personen]",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person",
+								"[uuid för personen]"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ta bort en person",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/person/[uuid för personen]",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person",
+								"[uuid för personen]"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Felsökning",
+			"item": [
+				{
+					"name": "Lägg till en person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"personUUID\", jsonData.items[0][\"_uuid\"]);\r",
+									"*/\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n        \"A_name\": {\r\n            \"first\": \"Harvey\",\r\n            \"last\": \"Bode\"\r\n        },\r\n        \"B_age\": 57,\r\n        \"C_spouse\": null\r\n        \"D_address\": {\r\n            \"city\": \"Columbia\",\r\n            \"postalCode\": \"61153\",\r\n            \"street\": \"9911 Monty Meadow\"\r\n        },\r\n        \"E_contactInfo\": [\r\n            {\r\n                \"mobile\": \"498-968-8879\"\r\n            }\r\n            {\r\n                \"email\": \"Frederic_Gorczany@example.com\"\r\n            }\r\n        ]\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/person",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sök efter en person",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/persons/81505035-7751-4070-9c71-4363782f2184",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons",
+								"81505035-7751-4070-9c71-4363782f2184"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Extra",
+			"item": [
+				{
+					"name": "DeckOfCards",
+					"item": [
+						{
+							"name": "New Deck of Cards",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonData = pm.response.json();\r",
+											"pm.collectionVariables.set(\"card_deck\", jsonData[\"deck_id\"]);\r",
+											"console.log(\"Deck ID is set to: \" + pm.collectionVariables.get(\"card_deck\"));\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://www.deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1",
+									"protocol": "https",
+									"host": [
+										"www",
+										"deckofcardsapi",
+										"com"
+									],
+									"path": [
+										"api",
+										"deck",
+										"new",
+										"shuffle",
+										""
+									],
+									"query": [
+										{
+											"key": "deck_count",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Shuffle Cards",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://www.deckofcardsapi.com/api/deck/{{card_deck}}/shuffle/",
+									"protocol": "https",
+									"host": [
+										"www",
+										"deckofcardsapi",
+										"com"
+									],
+									"path": [
+										"api",
+										"deck",
+										"{{card_deck}}",
+										"shuffle",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Draw Cards: 5",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"/*\r",
+											"let jsonData = pm.response.json().cards\r",
+											"jsonData.forEach((card, index) => {\r",
+											"    pm.collectionVariables.set(`card_${index}`, card[\"image\"])\r",
+											"    console.log(\"Card URL: \" + pm.collectionVariables.get(`card_${index}`));\r",
+											"})\r",
+											"*/\r",
+											"\r",
+											"var template = `\r",
+											"    {{#with response}}\r",
+											"    {{#each cards}}\r",
+											"    <img src=\"{{images.png}}\">\r",
+											"    {{/each}}\r",
+											"    {{/with}}\r",
+											"`;\r",
+											"pm.visualizer.set(template, {\r",
+											"    response: pm.response.json()\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://www.deckofcardsapi.com/api/deck/{{card_deck}}/draw/?count=5",
+									"protocol": "https",
+									"host": [
+										"www",
+										"deckofcardsapi",
+										"com"
+									],
+									"path": [
+										"api",
+										"deck",
+										"{{card_deck}}",
+										"draw",
+										""
+									],
+									"query": [
+										{
+											"key": "count",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Cards in Pile",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://www.deckofcardsapi.com/api/deck/{{card_deck}}/pile/{{card_pile}}/add/?cards=JC,QC",
+									"protocol": "https",
+									"host": [
+										"www",
+										"deckofcardsapi",
+										"com"
+									],
+									"path": [
+										"api",
+										"deck",
+										"{{card_deck}}",
+										"pile",
+										"{{card_pile}}",
+										"add",
+										""
+									],
+									"query": [
+										{
+											"key": "cards",
+											"value": "JC,QC"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Card in Pile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var template = `\r",
+											"    {{#with response.piles.my_card_pile}}\r",
+											"    {{#each cards}}\r",
+											"    <img src=\"{{images.png}}\">\r",
+											"    {{/each}}\r",
+											"    {{/with}}\r",
+											"`;\r",
+											"pm.visualizer.set(template, {\r",
+											"    response: pm.response.json()\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://www.deckofcardsapi.com/api/deck/{{card_deck}}/pile/{{card_pile}}/list/",
+									"protocol": "https",
+									"host": [
+										"www",
+										"deckofcardsapi",
+										"com"
+									],
+									"path": [
+										"api",
+										"deck",
+										"{{card_deck}}",
+										"pile",
+										"{{card_pile}}",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Return Cards to Deck",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://www.deckofcardsapi.com/api/deck/{{card_deck}}/return/",
+									"protocol": "https",
+									"host": [
+										"www",
+										"deckofcardsapi",
+										"com"
+									],
+									"path": [
+										"api",
+										"deck",
+										"{{card_deck}}",
+										"return",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Return Card From Pile",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://www.deckofcardsapi.com/api/deck/{{card_deck}}/pile/{{card_pile}}/return/",
+									"protocol": "https",
+									"host": [
+										"www",
+										"deckofcardsapi",
+										"com"
+									],
+									"path": [
+										"api",
+										"deck",
+										"{{card_deck}}",
+										"pile",
+										"{{card_pile}}",
+										"return",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "For more information, visit:\nhttps://www.deckofcardsapi.com/",
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Bilpooler",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miljodataportalen.stockholm.se/api/bilpooler-2021-punkter/",
+							"protocol": "https",
+							"host": [
+								"miljodataportalen",
+								"stockholm",
+								"se"
+							],
+							"path": [
+								"api",
+								"bilpooler-2021-punkter",
+								""
+							],
+							"query": [
+								{
+									"key": "aktor",
+									"value": "Kinto",
+									"disabled": true
+								},
+								{
+									"key": "aktor",
+									"value": "M",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lekplatser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://apigw.stockholm.se/NoAuth/VirtualhittaserviceDMZ/Rest/serviceunits?&filter[servicetype.id]=102&page[limit]=1500&page[offset]=0&sort=name",
+							"protocol": "https",
+							"host": [
+								"apigw",
+								"stockholm",
+								"se"
+							],
+							"path": [
+								"NoAuth",
+								"VirtualhittaserviceDMZ",
+								"Rest",
+								"serviceunits"
+							],
+							"query": [
+								{
+									"key": null,
+									"value": null
+								},
+								{
+									"key": "filter[servicetype.id]",
+									"value": "102"
+								},
+								{
+									"key": "page[limit]",
+									"value": "1500"
+								},
+								{
+									"key": "page[offset]",
+									"value": "0"
+								},
+								{
+									"key": "sort",
+									"value": "name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bored API",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://www.boredapi.com/api/activity",
+							"protocol": "https",
+							"host": [
+								"www",
+								"boredapi",
+								"com"
+							],
+							"path": [
+								"api",
+								"activity"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "social",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "relaxation",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "recreational",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "education",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "music",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "06eWN5QT8d-5mplPL_G3UX4nPzCO7vlTJhOC4d4_GqmXOCm5wA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://crudapi.co.uk/api/v1",
+			"type": "default"
+		},
+		{
+			"key": "personUUID",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "person_0",
+			"value": ""
+		},
+		{
+			"key": "person_1",
+			"value": ""
+		},
+		{
+			"key": "person_2",
+			"value": ""
+		},
+		{
+			"key": "person_3",
+			"value": ""
+		},
+		{
+			"key": "person_4",
+			"value": ""
+		},
+		{
+			"key": "person_5",
+			"value": ""
+		},
+		{
+			"key": "person_6",
+			"value": ""
+		},
+		{
+			"key": "person_7",
+			"value": ""
+		},
+		{
+			"key": "person_8",
+			"value": ""
+		},
+		{
+			"key": "person_9",
+			"value": ""
+		},
+		{
+			"key": "person_10",
+			"value": ""
+		},
+		{
+			"key": "person_11",
+			"value": ""
+		},
+		{
+			"key": "card_deck",
+			"value": ""
+		},
+		{
+			"key": "card_pile",
+			"value": "my_card_pile"
+		},
+		{
+			"key": "card_0",
+			"value": ""
+		},
+		{
+			"key": "card_1",
+			"value": ""
+		},
+		{
+			"key": "card_2",
+			"value": ""
+		},
+		{
+			"key": "card_3",
+			"value": ""
+		},
+		{
+			"key": "card_4",
+			"value": ""
+		}
+	]
+}
